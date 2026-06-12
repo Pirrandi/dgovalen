@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://dgovalen.vercel.app',
+  site: 'https://dgovalen.cl',
   integrations: [sitemap()],
   i18n: {
     defaultLocale: 'es',
