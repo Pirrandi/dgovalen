@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+
+const machines = (await getCollection('htb', e => !e.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const diffColor = { Easy: 'tag-green', Medium: 'tag-amber', Hard: 'tag-red', Insane: 'tag-purple' } as const;
+---
+
+<div class="page-header">
+  <div class="breadcrumb"><a href={lang === 'en' ? '/en' : '/'}>~</a> / htb</div>
+  <h1 class="page-title">{t(lang, 'htb.title')}</h1>
+  <p class="page-desc">{t(lang, 'htb.desc')}</p>
+</div>
+
+{machines.length === 0 ? (
+  <div class="empty"><span class="text-muted">{t(lang, 'empty.htb')} <span class="cursor"></span></span></div>
+) : (
+  <ul class="machine-list">
+    {machines.map(m => (
+      <li class="machine-row">
+        <div class="machine-meta">
+          <span class="machine-date">{m.data.date.toISOString().split('T')[0]}</span>
+          <span class={`tag ${diffColor[m.data.difficulty]}`}>{m.data.difficulty}</span>
+          <span class="tag tag-cyan">{m.data.os}</span>
+        </div>
+        <a href={`/htb/${m.id}`} class="machine-link">{m.data.title}</a>
+        <p class="machine-desc">{m.data.description}</p>
+        {m.data.tags.length > 0 && (
+          <div class="machine-tags">
+            {m.data.tags.map(tag => <span class="tag tag-green">{tag}</span>)}
+          </div>
+        )}
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+.page-header { margin-bottom: 2rem; }
+.breadcrumb { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem; }
+.breadcrumb a { color: var(--text-muted); }
+.page-title { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.page-desc { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+
+.machine-list { list-style: none; padding: 0; }
+.machine-row { padding: 1rem; border-bottom: 1px solid var(--bg-border); border-radius: 4px; }
+.machine-row:hover { background: var(--bg-card); }
+.machine-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+.machine-date { color: var(--text-muted); font-size: 0.75rem; }
+.machine-link { display: block; color: var(--text); font-weight: 700; font-size: 1rem; text-decoration: none; margin-bottom: 0.2rem; }
+.machine-link:hover { color: var(--purple-soft); }
+.machine-desc { color: var(--text-muted); font-size: 0.82rem; margin: 0 0 0.4rem; }
+.machine-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.empty { padding: 3rem 0; text-align: center; }
+</style>

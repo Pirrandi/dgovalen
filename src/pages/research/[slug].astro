@@ -1,0 +1,22 @@
+---
+import Post from '../../layouts/Post.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const papers = await getCollection('research', e => !e.data.draft);
+  return papers.map(p => ({ params: { slug: p.id }, props: { paper: p } }));
+}
+
+const { paper } = Astro.props;
+const { Content } = await render(paper);
+---
+<Post
+  title={paper.data.title}
+  description={paper.data.description}
+  date={paper.data.date}
+  tags={paper.data.tags}
+  badge="research"
+  badgeColor="tag-purple"
+>
+  <Content />
+</Post>

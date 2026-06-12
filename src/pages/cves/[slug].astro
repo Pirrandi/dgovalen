@@ -1,0 +1,46 @@
+---
+import Post from '../../layouts/Post.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const cves = await getCollection('cves', e => !e.data.draft);
+  return cves.map(c => ({ params: { slug: c.id }, props: { cve: c } }));
+}
+
+const { cve } = Astro.props;
+const { Content } = await render(cve);
+const sevColor = { Critical: 'tag-red', High: 'tag-red', Medium: 'tag-amber', Low: 'tag-green', Informational: 'tag-cyan' } as const;
+---
+<Post
+  title={`${cve.data.cve_id} — ${cve.data.title}`}
+  description={cve.data.description}
+  date={cve.data.date}
+  tags={cve.data.tags}
+  badge={cve.data.severity}
+  badgeColor={sevColor[cve.data.severity]}
+>
+  <div class="cve-meta-box">
+    <table>
+      <tr><th>CVE ID</th><td class="cve-id-cell">{cve.data.cve_id}</td></tr>
+      <tr><th>Severity</th><td><span class={`tag ${sevColor[cve.data.severity]}`}>{cve.data.severity}</span></td></tr>
+      {cve.data.cvss && <tr><th>CVSS</th><td>{cve.data.cvss}</td></tr>}
+      <tr><th>Affected</th><td>{cve.data.affected}</td></tr>
+    </table>
+  </div>
+  <Content />
+</Post>
+
+<style>
+.cve-meta-box {
+  margin-bottom: 2rem;
+}
+
+.cve-meta-box th {
+  width: 110px;
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.82rem;
+}
+
+.cve-id-cell { color: var(--red); font-weight: 700; }
+</style>

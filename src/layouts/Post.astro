@@ -1,0 +1,145 @@
+---
+import Base from './Base.astro';
+import { t, getLangFromUrl, type Lang } from '../i18n';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  tags?: string[];
+  badge?: string;
+  badgeColor?: string;
+  lang?: Lang;
+}
+
+const { title, description, date, tags = [], badge, badgeColor = 'tag-purple', lang: langProp } = Astro.props;
+const lang: Lang = langProp ?? getLangFromUrl(new URL(Astro.request.url));
+const formatted = date.toISOString().split('T')[0];
+---
+<Base title={title} description={description} lang={lang}>
+  <article class="post">
+    <header class="post-header">
+      <div class="post-meta">
+        <span class="post-date">{formatted}</span>
+        {badge && <span class={`tag ${badgeColor}`}>{badge}</span>}
+        {tags.map(t => <span class="tag tag-indigo">{t}</span>)}
+      </div>
+      <h1 class="post-title">{title}</h1>
+      <p class="post-desc">{description}</p>
+    </header>
+
+    <div class="post-body">
+      <slot />
+    </div>
+
+    <footer class="post-footer">
+      <a href="javascript:history.back()" class="back-link">{t(lang, 'post.back')}</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+.post { max-width: 740px; }
+
+/* Header */
+.post-header {
+  padding-bottom: 1.8rem;
+  margin-bottom: 2.2rem;
+  border-bottom: 1px solid var(--bg-border);
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+
+.post-date { color: var(--text-muted); font-size: 0.78rem; }
+
+.post-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.6rem;
+  word-break: break-word;
+  color: var(--text);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.post-desc {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Body typography */
+.post-body {
+  font-size: 0.95rem;
+  line-height: 1.85;
+}
+
+.post-body :global(h2) {
+  font-size: 1.15rem;
+  color: var(--purple-soft);
+  margin-top: 2.4rem;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #1e1535;
+}
+
+.post-body :global(h3) {
+  font-size: 1rem;
+  color: var(--indigo);
+  margin-top: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-body :global(h4) {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 1.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.post-body :global(a) {
+  color: var(--indigo);
+  text-underline-offset: 3px;
+}
+
+.post-body :global(a:hover) { color: var(--purple-soft); }
+
+.post-body :global(strong) { color: var(--text); font-weight: 700; }
+.post-body :global(em)     { color: var(--purple-soft); font-style: italic; }
+
+/* Footer */
+.post-footer {
+  margin-top: 3.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--bg-border);
+}
+
+.back-link { color: var(--text-muted); font-size: 0.82rem; }
+.back-link:hover { color: var(--purple-soft); }
+
+.post-body :global(.video-wrapper) {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.post-body :global(.video-wrapper iframe) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+</style>

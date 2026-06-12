@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+
+const papers = (await getCollection('research', e => !e.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<div class="page-header">
+  <div class="breadcrumb"><a href={lang === 'en' ? '/en' : '/'}>~</a> / research</div>
+  <h1 class="page-title">{t(lang, 'research.title')}</h1>
+  <p class="page-desc">{t(lang, 'research.desc')}</p>
+</div>
+
+{papers.length === 0 ? (
+  <div class="empty"><span class="text-muted">{t(lang, 'empty.research')} <span class="cursor"></span></span></div>
+) : (
+  <ul class="research-list">
+    {papers.map(p => (
+      <li class="research-row">
+        <div class="research-meta">
+          <span class="research-date">{p.data.date.toISOString().split('T')[0]}</span>
+          {p.data.tags.slice(0,4).map(tag => <span class="tag tag-purple">{tag}</span>)}
+        </div>
+        <a href={`/research/${p.id}`} class="research-link">{p.data.title}</a>
+        <p class="research-desc">{p.data.description}</p>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+.page-header { margin-bottom: 2rem; }
+.breadcrumb { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem; }
+.breadcrumb a { color: var(--text-muted); }
+.page-title { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.page-desc { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+
+.research-list { list-style: none; padding: 0; }
+.research-row { padding: 1rem; border-bottom: 1px solid var(--bg-border); border-radius: 4px; }
+.research-row:hover { background: var(--bg-card); }
+.research-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+.research-date { color: var(--text-muted); font-size: 0.75rem; }
+.research-link { display: block; color: var(--text); font-weight: 600; font-size: 0.95rem; text-decoration: none; margin-bottom: 0.2rem; }
+.research-link:hover { color: var(--purple-soft); }
+.research-desc { color: var(--text-muted); font-size: 0.82rem; margin: 0; }
+.empty { padding: 3rem 0; text-align: center; }
+</style>

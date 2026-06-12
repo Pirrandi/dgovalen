@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --bg:         #0d0b14;
+  --bg-card:    #12101c;
+  --bg-border:  #2a1f3d;
+  --purple:     #a855f7;
+  --purple-dim: #7c3aed;
+  --purple-soft:#c084fc;
+  --indigo:     #818cf8;
+  --red:        #f87171;
+  --amber:      #fbbf24;
+  --green:      #4ade80;
+  --text:       #e2d9f3;
+  --text-muted: #6b5f8a;
+  --font:       'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.75;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a { color: var(--indigo); text-decoration: none; transition: color 0.15s; }
+a:hover { color: var(--purple-soft); text-decoration: underline; }
+
+h1, h2, h3, h4 { color: var(--purple-soft); font-weight: 700; line-height: 1.3; }
+
+/* ── Inline code ─────────────────────────────────── */
+code {
+  background: #1e1535;
+  border: 1px solid #3a2a5a;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-family: var(--font);
+  color: var(--amber);
+  font-size: 0.88em;
+}
+
+/* ── Code blocks (Shiki output) ──────────────────── */
+pre,
+pre.astro-code {
+  position: relative;
+  background: #11101a !important;
+  border: 1px solid #2a1f3d;
+  border-radius: 8px;
+  padding: 1.4rem 1.4rem 1.2rem;
+  overflow-x: auto;
+  margin: 1.8rem 0;
+  font-size: 0.84em;
+  line-height: 1.7;
+  /* subtle glow */
+  box-shadow: 0 0 0 1px #1e1535, 0 4px 24px rgba(124,58,237,0.08);
+}
+
+/* language pill — pulled from data-language attr set by Shiki */
+pre.astro-code[data-language]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.6rem;
+  right: 0.8rem;
+  font-size: 0.65em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  background: #1e1535;
+  padding: 1px 7px;
+  border-radius: 3px;
+  border: 1px solid #3a2a5a;
+  font-family: var(--font);
+}
+
+/* dot row chrome */
+pre.astro-code::after {
+  content: '● ● ●';
+  position: absolute;
+  top: 0.7rem;
+  left: 0.9rem;
+  font-size: 0.5em;
+  letter-spacing: 0.3em;
+  color: #3a2a5a;
+  pointer-events: none;
+}
+
+pre.astro-code[data-language] {
+  padding-top: 2.4rem;
+}
+
+pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* scrollbar inside code blocks */
+pre::-webkit-scrollbar { height: 4px; }
+pre::-webkit-scrollbar-track { background: transparent; }
+pre::-webkit-scrollbar-thumb { background: #3a2a5a; border-radius: 2px; }
+
+/* ── Prose elements ──────────────────────────────── */
+hr { border: none; border-top: 1px solid var(--bg-border); margin: 2.5rem 0; }
+p  { margin-bottom: 1.1rem; }
+
+ul, ol { padding-left: 1.6rem; margin-bottom: 1.1rem; }
+li { margin-bottom: 0.35rem; }
+
+ul li::marker { color: var(--purple-dim); }
+ol li::marker { color: var(--purple-dim); }
+
+blockquote {
+  border-left: 3px solid var(--purple-dim);
+  padding: 0.6rem 1rem;
+  background: #110e1c;
+  border-radius: 0 6px 6px 0;
+  color: var(--text-muted);
+  margin: 1.8rem 0;
+  font-style: italic;
+}
+
+blockquote p { margin: 0; }
+
+/* ── Tables ──────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.8rem 0;
+  font-size: 0.9em;
+}
+
+th, td {
+  border: 1px solid var(--bg-border);
+  padding: 0.55rem 1rem;
+  text-align: left;
+}
+
+th {
+  color: var(--purple-soft);
+  background: #110e1c;
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+tr:nth-child(even) td { background: #100e1a; }
+
+/* ── Global scrollbar ────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--purple-dim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--purple); }
+
+/* ── Cursor blink ────────────────────────────────── */
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  background: var(--purple);
+  vertical-align: text-bottom;
+  animation: blink 1.2s step-end infinite;
+  margin-left: 2px;
+  border-radius: 1px;
+}
+
+/* ── Tags ────────────────────────────────────────── */
+.tag {
+  display: inline-block;
+  font-size: 0.7em;
+  padding: 1px 7px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tag-purple { color: var(--purple-soft); border-color: var(--purple-dim); }
+.tag-indigo { color: var(--indigo);      border-color: var(--indigo); }
+.tag-green  { color: var(--green);       border-color: #166534; }
+.tag-red    { color: var(--red);         border-color: #991b1b; }
+.tag-amber  { color: var(--amber);       border-color: #92400e; }
+.tag-cyan   { color: #67e8f9;            border-color: #0e7490; }
+
+/* ── Layout ──────────────────────────────────────── */
+.container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }

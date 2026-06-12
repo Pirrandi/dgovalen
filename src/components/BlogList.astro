@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+
+const posts = (await getCollection('blog', e => !e.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
+---
+
+<div class="page-header">
+  <div class="breadcrumb"><a href={lang === 'en' ? '/en' : '/'}>~</a> / blog</div>
+  <h1 class="page-title">{t(lang, 'blog.title')}</h1>
+  <p class="page-desc">{t(lang, 'blog.desc')}</p>
+</div>
+
+{allTags.length > 0 && (
+  <div class="tags-bar">
+    {allTags.map(tag => <span class="tag tag-purple">{tag}</span>)}
+  </div>
+)}
+
+{posts.length === 0 ? (
+  <div class="empty"><span class="text-muted">{t(lang, 'empty.blog')} <span class="cursor"></span></span></div>
+) : (
+  <ul class="post-list">
+    {posts.map(p => (
+      <li class="post-row">
+        <span class="post-date">{p.data.date.toISOString().split('T')[0]}</span>
+        <div class="post-info">
+          <a href={`/blog/${p.id}`} class="post-link">{p.data.title}</a>
+          <p class="post-desc">{p.data.description}</p>
+          <div class="post-tags">
+            {p.data.tags.map(tag => <span class="tag tag-purple">{tag}</span>)}
+          </div>
+        </div>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+.page-header { margin-bottom: 2rem; }
+.breadcrumb { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem; }
+.breadcrumb a { color: var(--text-muted); }
+.page-title { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.page-desc { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+
+.tags-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.8rem 0; border-top: 1px solid var(--bg-border); border-bottom: 1px solid var(--bg-border); margin-bottom: 1.5rem; }
+
+.post-list { list-style: none; padding: 0; }
+.post-row { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--bg-border); border-radius: 4px; }
+.post-row:hover { background: var(--bg-card); }
+.post-date { color: var(--text-muted); font-size: 0.75rem; padding-top: 0.15rem; white-space: nowrap; }
+.post-link { color: var(--text); font-weight: 600; font-size: 0.95rem; text-decoration: none; }
+.post-link:hover { color: var(--purple-soft); }
+.post-desc { color: var(--text-muted); font-size: 0.82rem; margin: 0.2rem 0; }
+.post-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
+.empty { padding: 3rem 0; text-align: center; }
+
+@media (max-width: 500px) {
+  .post-row { grid-template-columns: 1fr; gap: 0.3rem; }
+}
+</style>

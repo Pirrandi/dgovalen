@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+
+const cves = (await getCollection('cves', e => !e.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const sevColor = { Critical: 'tag-red', High: 'tag-red', Medium: 'tag-amber', Low: 'tag-green', Informational: 'tag-cyan' } as const;
+---
+
+<div class="page-header">
+  <div class="breadcrumb"><a href={lang === 'en' ? '/en' : '/'}>~</a> / cves</div>
+  <h1 class="page-title">{t(lang, 'cves.title')}</h1>
+  <p class="page-desc">{t(lang, 'cves.desc')}</p>
+</div>
+
+{cves.length === 0 ? (
+  <div class="empty"><span class="text-muted">{t(lang, 'empty.cves')} <span class="cursor"></span></span></div>
+) : (
+  <ul class="cve-list">
+    {cves.map(c => (
+      <li class="cve-row">
+        <div class="cve-meta">
+          <span class="cve-date">{c.data.date.toISOString().split('T')[0]}</span>
+          <span class={`tag ${sevColor[c.data.severity]}`}>{c.data.severity}</span>
+          {c.data.cvss && <span class="tag tag-amber">CVSS {c.data.cvss}</span>}
+        </div>
+        <a href={`/cves/${c.id}`} class="cve-link">
+          <span class="cve-id">{c.data.cve_id}</span>
+          <span class="cve-title"> — {c.data.title}</span>
+        </a>
+        <p class="cve-affected">{t(lang, 'post.affected')}: {c.data.affected}</p>
+        <p class="cve-desc">{c.data.description}</p>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+.page-header { margin-bottom: 2rem; }
+.breadcrumb { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.5rem; }
+.breadcrumb a { color: var(--text-muted); }
+.page-title { font-size: 1.5rem; margin-bottom: 0.3rem; }
+.page-desc { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+
+.cve-list { list-style: none; padding: 0; }
+.cve-row { padding: 1rem; border-bottom: 1px solid var(--bg-border); border-radius: 4px; }
+.cve-row:hover { background: var(--bg-card); }
+.cve-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
+.cve-date { color: var(--text-muted); font-size: 0.75rem; }
+.cve-link { display: block; font-weight: 600; font-size: 0.95rem; text-decoration: none; margin-bottom: 0.2rem; }
+.cve-link:hover .cve-title { color: var(--red); }
+.cve-id { color: var(--red); font-weight: 700; }
+.cve-title { color: var(--text); }
+.cve-affected { color: var(--text-muted); font-size: 0.78rem; margin: 0 0 0.2rem; }
+.cve-desc { color: var(--text-muted); font-size: 0.82rem; margin: 0; }
+.empty { padding: 3rem 0; text-align: center; }
+</style>
