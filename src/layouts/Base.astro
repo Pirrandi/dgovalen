@@ -13,11 +13,12 @@ const lang: Lang = langProp ?? getLangFromUrl(new URL(Astro.request.url));
 const otherLang = getOtherLang(lang);
 const fullTitle = title === 'dgovalen' ? title : `${title} · dgovalen`;
 
-// Build the alternate URL for the language switcher
 const currentPath = new URL(Astro.request.url).pathname;
 const alternatePath = lang === 'es'
   ? `/en${currentPath === '/' ? '' : currentPath}`
   : currentPath.replace(/^\/en/, '') || '/';
+
+const canonicalURL = new URL(currentPath, 'https://dgovalen.dev').href;
 ---
 <!doctype html>
 <html lang={lang}>
@@ -26,8 +27,20 @@ const alternatePath = lang === 'es'
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content={description} />
   <meta name="generator" content={Astro.generator} />
+  <link rel="canonical" href={canonicalURL} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="alternate" hreflang={otherLang} href={alternatePath} />
+  <link rel="alternate" type="application/rss+xml" title="dgovalen" href="/rss.xml" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:site_name" content="dgovalen" />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={description} />
   <title>{fullTitle}</title>
 </head>
 <body>
