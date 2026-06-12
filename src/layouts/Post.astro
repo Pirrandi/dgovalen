@@ -43,8 +43,8 @@ const formatted = date.toISOString().split('T')[0];
 
 /* Header */
 .post-header {
-  padding-bottom: 1.8rem;
-  margin-bottom: 2.2rem;
+  padding-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--bg-border);
 }
 
@@ -88,6 +88,8 @@ const formatted = date.toISOString().split('T')[0];
   padding-bottom: 0.4rem;
   border-bottom: 1px solid #1e1535;
 }
+
+.post-body :global(> *:first-child) { margin-top: 0; }
 
 .post-body :global(h3) {
   font-size: 1rem;

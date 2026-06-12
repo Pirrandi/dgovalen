@@ -12,6 +12,13 @@ const research = (await getCollection('research', e => !e.data.draft)).sort((a,b
 
 const diffColor = { Easy: 'tag-green', Medium: 'tag-amber', Hard: 'tag-red', Insane: 'tag-purple' } as const;
 const sevColor  = { Critical: 'tag-red', High: 'tag-red', Medium: 'tag-amber', Low: 'tag-green', Informational: 'tag-cyan' } as const;
+
+const sectionOrder = [
+  { key: 'blog',     latest: posts[0]?.data.date    ?? new Date(0) },
+  { key: 'htb',      latest: htb[0]?.data.date      ?? new Date(0) },
+  { key: 'cves',     latest: cves[0]?.data.date     ?? new Date(0) },
+  { key: 'research', latest: research[0]?.data.date ?? new Date(0) },
+].sort((a, b) => b.latest.valueOf() - a.latest.valueOf()).map(s => s.key);
 ---
 
 <!-- HERO -->
@@ -48,114 +55,111 @@ const sevColor  = { Critical: 'tag-red', High: 'tag-red', Medium: 'tag-amber', L
   </div>
 </section>
 
-<!-- BLOG -->
-{posts.length > 0 && (
-  <section class="section">
-    <div class="section-header">
-      <h2 class="section-title">{t(lang, 'section.blog')}</h2>
-      <a href={localePath(lang, '/blog')} class="section-more">{t(lang, 'section.seeAll')}</a>
-    </div>
-    <ul class="card-list">
-      {posts.map(p => (
-        <li class="card">
-          <div class="card-meta">
-            <span class="card-date">{p.data.date.toISOString().split('T')[0]}</span>
-            {p.data.tags.slice(0,3).map(tag => <span class="tag tag-purple">{tag}</span>)}
-          </div>
-          <a href={`/blog/${p.id}`} class="card-title">{p.data.title}</a>
-          <p class="card-desc">{p.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  </section>
-)}
-
-<!-- HTB -->
-{htb.length > 0 && (
-  <section class="section">
-    <div class="section-header">
-      <h2 class="section-title">{t(lang, 'section.htb')}</h2>
-      <a href={localePath(lang, '/htb')} class="section-more">{t(lang, 'section.seeAll')}</a>
-    </div>
-    <ul class="card-list">
-      {htb.map(p => (
-        <li class="card">
-          <div class="card-meta">
-            <span class="card-date">{p.data.date.toISOString().split('T')[0]}</span>
-            <span class={`tag ${diffColor[p.data.difficulty]}`}>{p.data.difficulty}</span>
-            <span class="tag tag-cyan">{p.data.os}</span>
-          </div>
-          <a href={`/htb/${p.id}`} class="card-title">{p.data.title}</a>
-          <p class="card-desc">{p.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  </section>
-)}
-
-<!-- CVES -->
-{cves.length > 0 && (
-  <section class="section">
-    <div class="section-header">
-      <h2 class="section-title">{t(lang, 'section.cves')}</h2>
-      <a href={localePath(lang, '/cves')} class="section-more">{t(lang, 'section.seeAll')}</a>
-    </div>
-    <ul class="card-list">
-      {cves.map(p => (
-        <li class="card card-cve">
-          <div class="card-meta">
-            <span class="card-date">{p.data.date.toISOString().split('T')[0]}</span>
-            <span class={`tag ${sevColor[p.data.severity]}`}>{p.data.severity}</span>
-            {p.data.cvss && <span class="tag tag-amber">CVSS {p.data.cvss}</span>}
-          </div>
-          <a href={`/cves/${p.id}`} class="card-title">
-            <span class="cve-id">{p.data.cve_id}</span> — {p.data.title}
-          </a>
-          <p class="card-desc">{p.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  </section>
-)}
-
-<!-- RESEARCH -->
-{research.length > 0 && (
-  <section class="section">
-    <div class="section-header">
-      <h2 class="section-title">{t(lang, 'section.research')}</h2>
-      <a href={localePath(lang, '/research')} class="section-more">{t(lang, 'section.seeAll')}</a>
-    </div>
-    <ul class="card-list">
-      {research.map(p => (
-        <li class="card">
-          <div class="card-meta">
-            <span class="card-date">{p.data.date.toISOString().split('T')[0]}</span>
-            {p.data.tags.slice(0,3).map(tag => <span class="tag tag-indigo">{tag}</span>)}
-          </div>
-          <a href={`/research/${p.id}`} class="card-title">{p.data.title}</a>
-          <p class="card-desc">{p.data.description}</p>
-        </li>
-      ))}
-    </ul>
-  </section>
-)}
+{sectionOrder.map(key => (<>
+  {key === 'blog' && posts.length > 0 && (
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">{t(lang, 'section.blog')}</h2>
+        <a href={localePath(lang, '/blog')} class="section-more">{t(lang, 'section.seeAll')}</a>
+      </div>
+      <ul class="card-list">
+        {posts.map(p => (
+          <li class="card">
+            <div class="card-meta">
+              <span class="card-date">{p.data.date.toISOString().split('T')[0]}</span>
+              {p.data.tags.slice(0,3).map(tag => <span class="tag tag-purple">{tag}</span>)}
+            </div>
+            <a href={localePath(lang, `/blog/${p.id}`)} class="card-title">{p.data.title}</a>
+            <p class="card-desc">{p.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+  {key === 'htb' && htb.length > 0 && (
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">{t(lang, 'section.htb')}</h2>
+        <a href={localePath(lang, '/htb')} class="section-more">{t(lang, 'section.seeAll')}</a>
+      </div>
+      <ul class="card-list">
+        {htb.map(p => (
+          <li class="card">
+            <div class="card-meta">
+              <span class="card-date">{p.data.date.toISOString().split('T')[0]}</span>
+              <span class={`tag ${diffColor[p.data.difficulty]}`}>{p.data.difficulty}</span>
+              <span class="tag tag-cyan">{p.data.os}</span>
+            </div>
+            <a href={localePath(lang, `/htb/${p.id}`)} class="card-title">{p.data.title}</a>
+            <p class="card-desc">{p.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+  {key === 'cves' && cves.length > 0 && (
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">{t(lang, 'section.cves')}</h2>
+        <a href={localePath(lang, '/cves')} class="section-more">{t(lang, 'section.seeAll')}</a>
+      </div>
+      <ul class="card-list">
+        {cves.map(p => (
+          <li class="card card-cve">
+            <div class="card-meta">
+              <span class="card-date">{p.data.date.toISOString().split('T')[0]}</span>
+              <span class={`tag ${sevColor[p.data.severity]}`}>{p.data.severity}</span>
+              {p.data.cvss && <span class="tag tag-amber">CVSS {p.data.cvss}</span>}
+            </div>
+            <a href={localePath(lang, `/cves/${p.id}`)} class="card-title">
+              <span class="cve-id">{p.data.cve_id}</span> — {p.data.title}
+            </a>
+            <p class="card-desc">{p.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+  {key === 'research' && research.length > 0 && (
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">{t(lang, 'section.research')}</h2>
+        <a href={localePath(lang, '/research')} class="section-more">{t(lang, 'section.seeAll')}</a>
+      </div>
+      <ul class="card-list">
+        {research.map(p => (
+          <li class="card">
+            <div class="card-meta">
+              <span class="card-date">{p.data.date.toISOString().split('T')[0]}</span>
+              {p.data.tags.slice(0,3).map(tag => <span class="tag tag-indigo">{tag}</span>)}
+            </div>
+            <a href={localePath(lang, `/research/${p.id}`)} class="card-title">{p.data.title}</a>
+            <p class="card-desc">{p.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</>))}
 
 <style>
 .hero { padding: 2rem 0 1rem; margin-bottom: 1.5rem; }
 
-.hero-profile { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 1.2rem; }
+.hero-profile { display: flex; align-items: flex-start; gap: 1.2rem; margin-bottom: 1.2rem; }
 
 .avatar { width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0; }
 
-.hero-name { font-size: 1.4rem; margin-bottom: 0.15rem; color: var(--text); font-weight: 700; }
+.hero-info { height: 72px; display: flex; flex-direction: column; justify-content: space-between; }
 
-.hero-handle { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+.hero-name { font-size: 1.3rem; margin: 0; color: var(--text); font-weight: 700; line-height: 1; }
+
+.hero-handle { font-size: 0.8rem; color: var(--text-muted); margin: 0; line-height: 1; }
 .hero-handle .sep { margin: 0 0.4rem; }
 
 .gh-link { color: var(--indigo); text-decoration: none; }
 .gh-link:hover { color: var(--purple-soft); text-decoration: none; }
 
-.hero-bio { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
+.hero-bio { font-size: 0.85rem; color: var(--text-muted); margin: 0; line-height: 1; }
 
 .muted { color: var(--text-muted); }
 
