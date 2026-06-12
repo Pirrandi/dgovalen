@@ -18,7 +18,9 @@ const alternatePath = lang === 'es'
   ? `/en${currentPath === '/' ? '' : currentPath}`
   : currentPath.replace(/^\/en/, '') || '/';
 
-const canonicalURL = new URL(currentPath, 'https://dgovalen.dev').href;
+const siteURL = Astro.site ?? new URL('https://dgovalen.vercel.app');
+const canonicalURL = new URL(currentPath, siteURL).href;
+const ogImageURL = new URL('/og.png', siteURL).href;
 ---
 <!doctype html>
 <html lang={lang}>
@@ -37,12 +39,12 @@ const canonicalURL = new URL(currentPath, 'https://dgovalen.dev').href;
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:site_name" content="dgovalen" />
-  <meta property="og:image" content="https://dgovalen.cl/og.png" />
+  <meta property="og:image" content={ogImageURL} />
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={fullTitle} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content="https://dgovalen.cl/og.png" />
+  <meta name="twitter:image" content={ogImageURL} />
   <title>{fullTitle}</title>
 </head>
 <body>
