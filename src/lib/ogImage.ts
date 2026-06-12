@@ -64,7 +64,7 @@ export async function generateOgImage(opts: OgOptions): Promise<Buffer> {
   ${lines.map((line, i) => `<text x="80" y="${titleStartY + i * lineHeight}" font-family="monospace" font-size="${fontSize}" font-weight="bold" fill="#e2e8f0">${esc(line)}</text>`).join('\n  ')}
   <text x="80" y="${descY}" font-family="monospace" font-size="21" fill="#6b7280">${esc(desc)}</text>
   <text x="80" y="582" font-family="monospace" font-size="19" fill="#3b3554">dgovalen.cl</text>
-  <text x="1120" y="582" font-family="monospace" font-size="17" fill="#4b4468" text-anchor="end">Diego Valencia · @pirrandi</text>
+  <text x="1120" y="582" font-family="monospace" font-size="22" fill="#6b6090" text-anchor="end">Diego Valencia · @pirrandi</text>
 </svg>`;
 
   return sharp(Buffer.from(svg)).png().toBuffer();
