@@ -10,13 +10,14 @@ interface Props {
   badge?: string;
   badgeColor?: string;
   lang?: Lang;
+  ogImage?: string;
 }
 
-const { title, description, date, tags = [], badge, badgeColor = 'tag-purple', lang: langProp } = Astro.props;
+const { title, description, date, tags = [], badge, badgeColor = 'tag-purple', lang: langProp, ogImage } = Astro.props;
 const lang: Lang = langProp ?? getLangFromUrl(new URL(Astro.request.url));
 const formatted = date.toISOString().split('T')[0];
 ---
-<Base title={title} description={description} lang={lang}>
+<Base title={title} description={description} lang={lang} ogImage={ogImage}>
   <article class="post">
     <header class="post-header">
       <div class="post-meta">

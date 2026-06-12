@@ -18,6 +18,7 @@ const sevColor = { Critical: 'tag-red', High: 'tag-red', Medium: 'tag-amber', Lo
   tags={cve.data.tags}
   badge={cve.data.severity}
   badgeColor={sevColor[cve.data.severity]}
+  ogImage={`/og/cves/${cve.id}.png`}
 >
   <div class="cve-meta-box">
     <table>

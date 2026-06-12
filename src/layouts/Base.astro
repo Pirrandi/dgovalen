@@ -6,9 +6,10 @@ interface Props {
   title?: string;
   description?: string;
   lang?: Lang;
+  ogImage?: string;
 }
 
-const { title = 'dgovalen', description = 'Security researcher. CVEs, HTB writeups, research.', lang: langProp } = Astro.props;
+const { title = 'dgovalen', description = 'Security researcher. CVEs, HTB writeups, research.', lang: langProp, ogImage } = Astro.props;
 const lang: Lang = langProp ?? getLangFromUrl(new URL(Astro.request.url));
 const otherLang = getOtherLang(lang);
 const fullTitle = title === 'dgovalen' ? title : `${title} · dgovalen`;
@@ -20,7 +21,7 @@ const alternatePath = lang === 'es'
 
 const siteURL = Astro.site ?? new URL('https://dgovalen.vercel.app');
 const canonicalURL = new URL(currentPath, siteURL).href;
-const ogImageURL = new URL('/og.png', siteURL).href;
+const ogImageURL = new URL(ogImage ?? '/og.png', siteURL).href;
 ---
 <!doctype html>
 <html lang={lang}>

@@ -16,6 +16,7 @@ const { Content } = await render(post);
   date={post.data.date}
   tags={post.data.tags}
   badge="blog"
+  ogImage={`/og/blog/${post.id}.png`}
 >
   <Content />
 </Post>
