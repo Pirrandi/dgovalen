@@ -3,7 +3,7 @@ title: "Mis dotfiles: Arch Linux + Sway"
 date: 2026-09-30
 description: "Cómo está armado mi entorno en Arch Linux con Sway: el stack, los principios detrás, los contextos de workspaces y un instalador interactivo que lo deja todo listo en un comando."
 tags: ["linux", "arch", "sway", "dotfiles", "neovim"]
-draft: false
+draft: true
 ---
 
 Los dotfiles son los archivos de configuración de tu entorno: el gestor de ventanas, la terminal, la shell, el editor. Tenerlos en un repositorio significa que cualquier máquina nueva queda igual a la tuya con un `git clone` y un script.
