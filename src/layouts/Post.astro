@@ -118,6 +118,15 @@ const formatted = date.toISOString().split('T')[0];
 .post-body :global(strong) { color: var(--text); font-weight: 700; }
 .post-body :global(em)     { color: var(--purple-soft); font-style: italic; }
 
+.post-body :global(img) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--bg-border);
+  border-radius: 4px;
+}
+
 /* Footer */
 .post-footer {
   margin-top: 3.5rem;
